@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Linux / WSL pack for LOONGS Admin PC (run from admin/client).
+# Linux / WSL pack for 统一用户身份管理系统（UUIMS） PC (run from admin/client).
 # Builds: web + linux only. Uses native Linux `fvm` + .fvmrc (no auto-install).
 # Windows → .\pack.ps1   |   macOS → ./pack.command
 #
@@ -16,7 +16,7 @@ DO_LINUX=0
 # which corrupts it to http://{host:21000}.
 _DEFAULT_API_BASE_URL='http://{host}:21000'
 API_BASE_URL="${API_BASE_URL:-$_DEFAULT_API_BASE_URL}"
-BASE_HREF="${BASE_HREF:-/admin/web/}"
+BASE_HREF="${BASE_HREF:-/uuims/web/}"
 
 die() { echo "$*" >&2; exit 1; }
 
@@ -48,7 +48,7 @@ export FLUTTER_STORAGE_BASE_URL="${FLUTTER_STORAGE_BASE_URL:-https://storage.flu
 export PUB_HOSTED_URL="${PUB_HOSTED_URL:-https://pub.flutter-io.cn}"
 
 CLIENT_ROOT="$(cd "$(dirname "$0")" && pwd)"
-PUBLIC_WEB="$CLIENT_ROOT/../server/apps/Admin/public/web"
+PUBLIC_WEB="$CLIENT_ROOT/../server/apps/Uuims/public/web"
 DIST_DIR="$CLIENT_ROOT/dist"
 
 step() { printf '\n==> %s\n' "$*"; }
@@ -154,7 +154,7 @@ if [[ "$DO_LINUX" -eq 1 ]]; then
   done
   [[ -n "$RELEASE" ]] || die "linux release bundle 未找到"
   mkdir -p "$DIST_DIR"
-  ZIP="$DIST_DIR/admin-pc-linux.zip"
+  ZIP="$DIST_DIR/uuims-pc-linux.zip"
   rm -f "$ZIP"
   step "Zip -> $ZIP"
   (cd "$RELEASE" && zip -r -q "$ZIP" .)

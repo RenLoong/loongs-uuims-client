@@ -23,7 +23,7 @@ class RenderError implements Exception {
   String toString() => message;
 }
 
-/// Page code + params (query of GET /admin/api/pages/{page}); value-equal for provider families.
+/// Page code + params (query of GET /uuims/api/pages/{page}); value-equal for provider families.
 @immutable
 class PageRequest {
   PageRequest(this.page, [Map<String, dynamic> params = const {}])
@@ -55,7 +55,7 @@ String get clientEnv {
   };
 }
 
-/// GET /admin/api/pages/{page} with `X-Client-Platform: pc`, `X-Client-Env`, `X-Render-Schema` and
+/// GET /uuims/api/pages/{page} with `X-Client-Platform: pc`, `X-Client-Env`, `X-Render-Schema` and
 /// `If-None-Match` from the local cache (304 → cached description). The cache lives as long as the
 /// signed-in user (provider is rebuilt on user change / logout); the server's ETag covers role,
 /// permission, menu and schema changes, so every visit revalidates.

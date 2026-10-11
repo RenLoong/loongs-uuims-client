@@ -23,7 +23,7 @@ Future<void> main() async {
     await windowManager.ensureInitialized();
     await windowManager.waitUntilReadyToShow(
       WindowOptions(
-        title: tr('LOONGS 平台管理'),
+        title: tr('统一用户身份管理系统（UUIMS）'),
         size: const Size(1280, 800),
         minimumSize: const Size(960, 600),
         center: true,
@@ -40,5 +40,5 @@ Future<void> main() async {
     );
   }
 
-  runApp(ProviderScope(overrides: [prefsProvider.overrideWithValue(prefs)], child: const AdminApp()));
+  runApp(ProviderScope(overrides: [prefsProvider.overrideWithValue(prefs)], child: const UuimsApp()));
 }

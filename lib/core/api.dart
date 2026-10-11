@@ -95,7 +95,7 @@ class Api {
   Future<dynamic> put(String path, [Object? body]) => _send(_dio.put<dynamic>(path, data: body));
   Future<dynamic> delete(String path) => _send(_dio.delete<dynamic>(path));
 
-  /// Any method (used by the generic renderer's ActionRunner). [path] is relative to `/admin/api`
+  /// Any method (used by the generic renderer's ActionRunner). [path] is relative to `/uuims/api`
   /// or an absolute URL.
   Future<dynamic> send(String method, String path, {Map<String, dynamic>? query, Object? body}) =>
       _send(_dio.request<dynamic>(path, data: body, queryParameters: query, options: Options(method: method.toUpperCase())));
@@ -123,7 +123,7 @@ class Api {
 
 final apiDioProvider = Provider<Dio>((ref) {
   final dio = Dio(BaseOptions(
-    baseUrl: '${ref.watch(baseUrlProvider)}/admin/api',
+    baseUrl: '${ref.watch(baseUrlProvider)}/uuims/api',
     connectTimeout: const Duration(seconds: 5),
     receiveTimeout: const Duration(seconds: 15),
     responseType: ResponseType.json,

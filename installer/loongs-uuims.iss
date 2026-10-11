@@ -1,5 +1,5 @@
-; LOONGS Admin PC installer (Inno Setup 6)
-#define MyAppName "LOONGS Admin"
+; UUIMS PC installer (Inno Setup 6)
+#define MyAppName "UUIMS"
 #define MyAppVersion "1.0.0"
 #define MyAppPublisher "RenLoong"
 #define MyAppExeName "client.exe"
@@ -12,8 +12,8 @@ AppPublisher={#MyAppPublisher}
 DefaultDirName={autopf}\LOONGS\Admin
 DefaultGroupName=LOONGS
 DisableProgramGroupPage=yes
-OutputDir=C:\Users\unkno\p1\admin-pc-winbuild\dist
-OutputBaseFilename=LOONGS-Admin-Setup-{#MyAppVersion}
+OutputDir=C:\Users\unkno\p1\uuims-pc-winbuild\dist
+OutputBaseFilename=LOONGS-Uuims-Setup-{#MyAppVersion}
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern

@@ -12,7 +12,7 @@ import 'render_repository.dart';
 import 'table_view.dart';
 import '../core/i18n.dart';
 
-/// Generic page (RENDER.md §8.1 PageRenderer): fetches GET /admin/api/pages/{page} (ETag cached)
+/// Generic page (RENDER.md §8.1 PageRenderer): fetches GET /uuims/api/pages/{page} (ETag cached)
 /// and dispatches on `type`. [expectType] is the menu's `page_type`; a mismatch is an error.
 class RenderPage extends ConsumerWidget {
   const RenderPage({super.key, required this.page, this.params = const {}, this.expectType});

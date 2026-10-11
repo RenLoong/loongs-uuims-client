@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/api.dart';
 import '../core/api_client.dart';
 
-/// Calls the APIs named in page descriptions (`/admin/api/...` paths) through the shared [Api]
+/// Calls the APIs named in page descriptions (`/uuims/api/...` paths) through the shared [Api]
 /// (bearer token, refresh-on-401, `{code,message,data}` envelope).
 class RenderApi {
   RenderApi(this.api, this.baseUrl);
@@ -11,9 +11,9 @@ class RenderApi {
   final Api api;
   final String baseUrl;
 
-  static const _prefix = '/admin/api';
+  static const _prefix = '/uuims/api';
 
-  /// `/admin/api/x` → `/x` (relative to the Api base `<host>/admin/api`); other absolute paths →
+  /// `/uuims/api/x` → `/x` (relative to the Api base `<host>/uuims/api`); other absolute paths →
   /// `<host>/path`; full URLs unchanged.
   String resolve(String path) {
     if (path.startsWith('http://') || path.startsWith('https://')) return path;

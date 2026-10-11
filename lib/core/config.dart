@@ -41,13 +41,13 @@ String resolveWebTokenStorage(String configured, {required bool secureContext}) 
       _ => secureContext ? 'secure' : 'session',
     };
 
-/// Public OAuth client registered by `./loongs admin:install` (PKCE S256, no secret).
+/// Public OAuth client registered by `./loongs uuims:install` (PKCE S256, no secret).
 const String kOAuthClientId = String.fromEnvironment(
   'OAUTH_CLIENT_ID',
-  defaultValue: 'admin-pc',
+  defaultValue: 'uuims-pc',
 );
 
-const String kOAuthScope = 'admin profile';
+const String kOAuthScope = 'uuims profile';
 
 /// Web redirect target (static page next to index.html, forwards to #/auth/callback).
 /// Its absolute URL must be registered on the client (127.0.0.1 loopback: any port).

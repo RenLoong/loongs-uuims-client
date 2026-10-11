@@ -54,7 +54,7 @@ class LoginPage extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(height: 18),
-                  Text(tr('LOONGS 平台管理'),
+                  Text(tr('统一用户身份管理系统（UUIMS）'),
                       textAlign: TextAlign.center, style: theme.textTheme.h3.copyWith(fontWeight: FontWeight.w700, letterSpacing: -0.4)),
                   const SizedBox(height: 6),
                   Text(

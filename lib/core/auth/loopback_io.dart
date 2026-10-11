@@ -36,7 +36,7 @@ class LoopbackReceiver {
           ..headers.set('Cache-Control', 'no-store')
           ..write('<!doctype html><meta charset="utf-8"><title>LOONGS</title>'
               '<body style="font-family:sans-serif;text-align:center;padding-top:80px">'
-              '<h2>${ok ? tr('登录完成') : tr('登录未完成')}</h2><p>${tr('可以关闭此页面并返回 LOONGS 平台管理。')}</p></body>');
+              '<h2>${ok ? tr('登录完成') : tr('登录未完成')}</h2><p>${tr('可以关闭此页面并返回 统一用户身份管理系统（UUIMS）。')}</p></body>');
         await req.response.close();
         return q;
       }

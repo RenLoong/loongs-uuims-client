@@ -1,4 +1,4 @@
-# Windows pack for LOONGS Admin PC (run in PowerShell from admin/client).
+# Windows pack for 统一用户身份管理系统（UUIMS） PC (run in PowerShell from admin/client).
 # Builds: web + windows only. Uses Windows `fvm` + .fvmrc (no auto-install).
 # Linux/WSL → ./pack.sh   |   macOS → ./pack.command
 #
@@ -11,15 +11,15 @@ param(
     [switch]$SkipWeb,
     [switch]$SkipWindows,
     [string]$ApiBaseUrl = 'http://{host}:21000',
-    [string]$BaseHref = '/admin/web/',
+    [string]$BaseHref = '/uuims/web/',
     [string]$Iscc = ''
 )
 
 $ErrorActionPreference = 'Stop'
 $ClientRoot = $PSScriptRoot
-$PublicWeb = Join-Path $ClientRoot '..\server\apps\Admin\public\web'
+$PublicWeb = Join-Path $ClientRoot '..\server\apps\Uuims\public\web'
 $DistDir = Join-Path $ClientRoot 'dist'
-$ZipPath = Join-Path $DistDir 'admin-pc-windows.zip'
+$ZipPath = Join-Path $DistDir 'uuims-pc-windows.zip'
 
 if (-not $env:FLUTTER_STORAGE_BASE_URL) { $env:FLUTTER_STORAGE_BASE_URL = 'https://storage.flutter-io.cn' }
 if (-not $env:PUB_HOSTED_URL) { $env:PUB_HOSTED_URL = 'https://pub.flutter-io.cn' }
@@ -93,7 +93,7 @@ Write-Host "fvm=$fvm"
 
 $buildRoot = $ClientRoot
 if (Test-UncPath $ClientRoot) {
-    $stage = if ($env:ADMIN_PC_WIN_STAGE) { $env:ADMIN_PC_WIN_STAGE } else { Join-Path $env:USERPROFILE 'p1\admin-pc-winbuild' }
+    $stage = if ($env:ADMIN_PC_WIN_STAGE) { $env:ADMIN_PC_WIN_STAGE } else { Join-Path $env:USERPROFILE 'p1\uuims-pc-winbuild' }
     Write-Step "Stage UNC -> $stage"
     if (Test-Path $stage) { Remove-Item $stage -Recurse -Force }
     New-Item -ItemType Directory -Force -Path $stage | Out-Null
@@ -188,8 +188,8 @@ try {
         Write-Host "OK $ZipPath"
 
         $isccExe = Resolve-Iscc $Iscc
-        $iss = Join-Path $ClientRoot 'installer\loongs-admin.iss'
-        if (-not (Test-Path $iss)) { $iss = Join-Path $buildRoot 'installer\loongs-admin.iss' }
+        $iss = Join-Path $ClientRoot 'installer\loongs-uuims.iss'
+        if (-not (Test-Path $iss)) { $iss = Join-Path $buildRoot 'installer\loongs-uuims.iss' }
         if ($isccExe -and (Test-Path $iss)) {
             Write-Step "Inno Setup"
             $issDir = Join-Path $buildRoot 'installer'
@@ -204,7 +204,7 @@ try {
             [System.IO.File]::WriteAllText($issWork, $issText)
             & $isccExe $issWork
             if ($LASTEXITCODE -ne 0) { throw "ISCC failed ($LASTEXITCODE)" }
-            $setup = Get-ChildItem $outDir -Filter 'LOONGS-Admin-Setup-*.exe' | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+            $setup = Get-ChildItem $outDir -Filter 'LOONGS-Uuims-Setup-*.exe' | Sort-Object LastWriteTime -Descending | Select-Object -First 1
             if ($setup) {
                 Copy-Item $setup.FullName $DistDir -Force
                 Write-Host "OK $($setup.Name)"

@@ -23,8 +23,8 @@ IconData menuIcon(String? name) => switch (name) {
 
 /// White sidebar (merchant-admin style) and the server menu tree. Language and appearance
 /// live in the settings dialog, opened from the account row (and the Windows caption).
-class AdminShell extends ConsumerWidget {
-  const AdminShell({super.key, required this.location, required this.child});
+class UuimsShell extends ConsumerWidget {
+  const UuimsShell({super.key, required this.location, required this.child});
 
   final String location;
   final Widget child;

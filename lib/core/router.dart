@@ -59,7 +59,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(path: '/health', builder: (_, _) => const HealthPage()),
       ShellRoute(
-        builder: (_, s, child) => AdminShell(location: s.uri.path, child: child),
+        builder: (_, s, child) => UuimsShell(location: s.uri.path, child: child),
         routes: [
           GoRoute(path: '/', builder: (_, _) => const HomePage()),
           GoRoute(path: '/403', builder: (_, _) => const ForbiddenPage()),
@@ -70,12 +70,12 @@ final routerProvider = Provider<GoRouter>((ref) {
               path: p,
               builder: (_, s) => MenuRoutePage(path: p, params: s.uri.queryParameters, fallback: const NotFoundPage()),
             ),
-          // R3: 平台概览 (menu.json page admin.dashboard.overview, page_type dashboard).
+          // R3: 平台概览 (menu.json page uuims.dashboard.overview, page_type dashboard).
           GoRoute(
             path: '/dashboard',
             builder: (_, s) => MenuRoutePage(path: '/dashboard', params: s.uri.queryParameters, fallback: const NotFoundPage()),
           ),
-          // Generic pages by code (openForm mode "page", deep links): /p/admin.system.admin-form?id=3
+          // Generic pages by code (openForm mode "page", deep links): /p/uuims.system.admin-form?id=3
           GoRoute(
             path: '/p/:page',
             builder: (_, s) => RenderPage(key: ValueKey(s.uri.toString()), page: s.pathParameters['page']!, params: s.uri.queryParameters),
@@ -84,7 +84,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
     ],
     // Menu paths without a hand-written route: generic page if the menu declares one, else 404.
-    errorBuilder: (_, s) => AdminShell(
+    errorBuilder: (_, s) => UuimsShell(
       location: s.uri.path,
       child: MenuRoutePage(path: s.uri.path, params: s.uri.queryParameters, fallback: const NotFoundPage()),
     ),

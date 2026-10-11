@@ -1,5 +1,5 @@
 #!/bin/bash
-# macOS pack for LOONGS Admin PC (double-click or run from admin/client).
+# macOS pack for 统一用户身份管理系统（UUIMS） PC (double-click or run from admin/client).
 # Builds: web + macos only. Uses macOS `fvm` + .fvmrc (no auto-install).
 # Linux/WSL → ./pack.sh   |   Windows → .\pack.ps1
 #
@@ -16,7 +16,7 @@ SKIP_MACOS=0
 # which corrupts it to http://{host:21000}.
 _DEFAULT_API_BASE_URL='http://{host}:21000'
 API_BASE_URL="${API_BASE_URL:-$_DEFAULT_API_BASE_URL}"
-BASE_HREF="${BASE_HREF:-/admin/web/}"
+BASE_HREF="${BASE_HREF:-/uuims/web/}"
 
 die() { echo "$*" >&2; exit 1; }
 
@@ -44,7 +44,7 @@ export FLUTTER_STORAGE_BASE_URL="${FLUTTER_STORAGE_BASE_URL:-https://storage.flu
 export PUB_HOSTED_URL="${PUB_HOSTED_URL:-https://pub.flutter-io.cn}"
 
 CLIENT_ROOT="$(pwd)"
-PUBLIC_WEB="$CLIENT_ROOT/../server/apps/Admin/public/web"
+PUBLIC_WEB="$CLIENT_ROOT/../server/apps/Uuims/public/web"
 DIST_DIR="$CLIENT_ROOT/dist"
 
 step() { printf '\n==> %s\n' "$*"; }
@@ -113,7 +113,7 @@ if [[ "$SKIP_MACOS" -eq 0 ]]; then
   done
   [[ -n "$APP" ]] || die "macos .app 未找到"
   mkdir -p "$DIST_DIR"
-  ZIP="$DIST_DIR/admin-pc-macos.zip"
+  ZIP="$DIST_DIR/uuims-pc-macos.zip"
   rm -f "$ZIP"
   step "Zip -> $ZIP"
   ditto -c -k --sequesterRsrc --keepParent "$APP" "$ZIP"

@@ -10,7 +10,7 @@ import '../../widgets/admin_grid.dart';
 import '../../widgets/common.dart';
 import '../../core/i18n.dart';
 
-/// Custom component name of the server page admin.system.role-permissions (RENDER.md §9).
+/// Custom component name of the server page uuims.system.role-permissions (RENDER.md §9).
 const kRolePermissionEditor = 'role-permission-editor';
 
 /// Registers the P1 custom pages (the only hand-written system pages left after R4).
@@ -31,7 +31,7 @@ const _defaultFieldPerms = [('', '默认'), ('hidden', '隐藏'), ('masked', '�
 /// 角色权限: menu / button permission tree (merged apps/*/menu.json), data scope (+ custom
 /// department tree) and field permissions of one role. Saves with a partial
 /// `PUT {save} {permissions, data_scope, field_perms}` — the basic fields (code, name, …) belong to
-/// the generic form admin.system.role-form and are not sent. The server re-checks every grant
+/// the generic form uuims.system.role-form and are not sent. The server re-checks every grant
 /// (40304: cannot grant more than you have; 422: unknown codes).
 class RolePermissionEditor extends ConsumerStatefulWidget {
   const RolePermissionEditor({super.key, required this.page});
@@ -83,9 +83,9 @@ class _RolePermissionEditorState extends ConsumerState<RolePermissionEditor> {
     try {
       final results = await Future.wait([
         api.get(load),
-        api.get(_page.path('menus') ?? '/admin/api/system/menus'),
-        api.get(_page.path('depts') ?? '/admin/api/system/depts'),
-        api.get(_page.path('fields') ?? '/admin/api/system/fields'),
+        api.get(_page.path('menus') ?? '/uuims/api/system/menus'),
+        api.get(_page.path('depts') ?? '/uuims/api/system/depts'),
+        api.get(_page.path('fields') ?? '/uuims/api/system/fields'),
       ]);
       final r = asJson(results[0]);
       _role = r;

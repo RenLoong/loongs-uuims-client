@@ -67,7 +67,7 @@ class _HealthPageState extends ConsumerState<HealthPage> {
             shrinkWrap: true,
             children: [
               ShadCard(
-                title: Text(tr('LOONGS 平台管理')),
+                title: Text(tr('统一用户身份管理系统（UUIMS）')),
                 description: Text(tr('P0 骨架：后端健康检查')),
                 child: Padding(
                   padding: const EdgeInsets.only(top: 16),

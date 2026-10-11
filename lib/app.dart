@@ -10,8 +10,8 @@ import 'core/settings.dart';
 import 'core/theme.dart';
 import 'widgets/window_caption.dart';
 
-class AdminApp extends ConsumerWidget {
-  const AdminApp({super.key});
+class UuimsApp extends ConsumerWidget {
+  const UuimsApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -26,7 +26,7 @@ class AdminApp extends ConsumerWidget {
       }
     });
     return ShadApp.router(
-      title: tr('LOONGS 平台管理'),
+      title: tr('统一用户身份管理系统（UUIMS）'),
       debugShowCheckedModeBanner: false,
       locale: localeOf(settings.language),
       supportedLocales: supportedLocales,
