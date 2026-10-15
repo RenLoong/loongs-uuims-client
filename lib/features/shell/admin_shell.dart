@@ -22,17 +22,22 @@ IconData? menuIcon(String? name) {
     'folder' => LucideIcons.folder,
     'layout-dashboard' => LucideIcons.layoutDashboard,
     'file-text' => LucideIcons.fileText,
+    'bell' => LucideIcons.bell,
+    'house' => LucideIcons.house,
     _ => null,
   };
 }
 
-/// White sidebar (merchant-uuims style) and the server menu tree. Language and appearance
-/// live in the settings dialog, opened from the account row (and the Windows caption).
+/// White sidebar (merchant-uuims style) and the server menu tree.
+/// 「首页」is pinned to the overview dashboard; the matching menu.json row is not listed again.
+/// Language / appearance: settings dialog from the avatar menu (and the Windows caption).
 class UuimsShell extends ConsumerWidget {
   const UuimsShell({super.key, required this.location, required this.child});
 
   final String location;
   final Widget child;
+
+  static bool _isHomePath(String? path) => path == '/' || path == '/dashboard';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,6 +45,7 @@ class UuimsShell extends ConsumerWidget {
     final theme = ShadTheme.of(context);
     final apple = AppleColors.of(context);
     final p = auth.profile;
+    final homeSelected = _isHomePath(location);
     return Scaffold(
       backgroundColor: theme.colorScheme.background,
       body: Row(
@@ -71,9 +77,9 @@ class UuimsShell extends ConsumerWidget {
                 ),
                 _NavItem(
                   label: tr('首页'),
-                  icon: LucideIcons.house,
-                  selected: location == '/',
-                  onTap: () => context.go('/'),
+                  icon: LucideIcons.layoutDashboard,
+                  selected: homeSelected,
+                  onTap: () => context.go('/dashboard'),
                 ),
                 Expanded(
                   child: ListView(
@@ -81,52 +87,18 @@ class UuimsShell extends ConsumerWidget {
                     key: const PageStorageKey<String>('uuims-sidebar'),
                     primary: false,
                     padding: const EdgeInsets.only(bottom: 12),
-                    children: [for (final m in auth.menus) ..._build(context, m, 0)],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 8, 8, 14),
-                  child: Row(
                     children: [
-                      CircleAvatar(
-                        radius: 15,
-                        backgroundColor: apple.blue.withValues(alpha: 0.12),
-                        child: Text(
-                          (p?.nickname.isNotEmpty ?? false) ? p!.nickname.characters.first : '·',
-                          style: TextStyle(color: apple.blue, fontWeight: FontWeight.w600, fontSize: 13),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(p?.nickname ?? '…', style: theme.textTheme.small, overflow: TextOverflow.ellipsis),
-                            Text(p?.username ?? '', style: theme.textTheme.muted.copyWith(fontSize: 12), overflow: TextOverflow.ellipsis),
-                          ],
-                        ),
-                      ),
-                      Semantics(
-                        label: tr('设置'),
-                        button: true,
-                        excludeSemantics: true,
-                        child: ShadIconButton.ghost(
-                          key: const ValueKey('open-settings'),
-                          icon: const Icon(LucideIcons.settings, size: 16),
-                          onPressed: () => showSettingsDialog(context),
-                        ),
-                      ),
-                      Semantics(
-                        label: tr('退出登录'),
-                        button: true,
-                        excludeSemantics: true,
-                        child: ShadIconButton.ghost(
-                          icon: const Icon(LucideIcons.logOut, size: 16),
-                          onPressed: () => ref.read(authProvider.notifier).logout(),
-                        ),
-                      ),
+                      for (final m in auth.menus)
+                        if (!_isHomePath(m.path)) ..._build(context, m, 0),
                     ],
                   ),
+                ),
+                _AccountFooter(
+                  nickname: p?.nickname ?? '…',
+                  username: p?.username ?? '',
+                  onAccount: () => context.go('/account'),
+                  onSettings: () => showSettingsDialog(context),
+                  onLogout: () => ref.read(authProvider.notifier).logout(),
                 ),
               ],
             ),
@@ -146,13 +118,15 @@ class UuimsShell extends ConsumerWidget {
 
   List<Widget> _build(BuildContext context, MenuNode m, int depth) {
     if (m.isDir) {
+      final kids = [for (final c in m.children) if (!_isHomePath(c.path)) ..._build(context, c, depth + 1)];
+      if (kids.isEmpty) return const [];
       final t = ShadTheme.of(context);
       return [
         Padding(
           padding: EdgeInsets.fromLTRB(18.0 + depth * 12, 16, 12, 4),
           child: Text(m.name, style: t.textTheme.muted.copyWith(fontSize: 12, fontWeight: FontWeight.w600)),
         ),
-        for (final c in m.children) ..._build(context, c, depth + 1),
+        ...kids,
       ];
     }
     return [
@@ -164,6 +138,103 @@ class UuimsShell extends ConsumerWidget {
         onTap: m.path == null ? null : () => context.go(m.path!),
       ),
     ];
+  }
+}
+
+/// Avatar + name: tap opens menu (账户管理 / 设置 / 退出登录). No standalone gear or logout icons.
+class _AccountFooter extends StatelessWidget {
+  const _AccountFooter({
+    required this.nickname,
+    required this.username,
+    required this.onAccount,
+    required this.onSettings,
+    required this.onLogout,
+  });
+
+  final String nickname;
+  final String username;
+  final VoidCallback onAccount;
+  final VoidCallback onSettings;
+  final VoidCallback onLogout;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = ShadTheme.of(context);
+    final apple = AppleColors.of(context);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8, 4, 8, 10),
+      child: PopupMenuButton<String>(
+        key: const ValueKey('account-menu'),
+        tooltip: nickname,
+        offset: const Offset(0, -8),
+        position: PopupMenuPosition.over,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        onSelected: (v) {
+          switch (v) {
+            case 'account':
+              onAccount();
+            case 'settings':
+              onSettings();
+            case 'logout':
+              onLogout();
+          }
+        },
+        itemBuilder: (context) => [
+          PopupMenuItem(
+            value: 'account',
+            child: Row(children: [
+              const Icon(LucideIcons.user, size: 16),
+              const SizedBox(width: 10),
+              Text(tr('账户管理')),
+            ]),
+          ),
+          PopupMenuItem(
+            key: const ValueKey('open-settings'),
+            value: 'settings',
+            child: Row(children: [
+              const Icon(LucideIcons.settings, size: 16),
+              const SizedBox(width: 10),
+              Text(tr('设置')),
+            ]),
+          ),
+          const PopupMenuDivider(),
+          PopupMenuItem(
+            value: 'logout',
+            child: Row(children: [
+              Icon(LucideIcons.logOut, size: 16, color: apple.red),
+              const SizedBox(width: 10),
+              Text(tr('退出登录'), style: TextStyle(color: apple.red)),
+            ]),
+          ),
+        ],
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 15,
+                backgroundColor: apple.blue.withValues(alpha: 0.12),
+                child: Text(
+                  nickname.isNotEmpty ? nickname.characters.first : '·',
+                  style: TextStyle(color: apple.blue, fontWeight: FontWeight.w600, fontSize: 13),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(nickname, style: theme.textTheme.small, overflow: TextOverflow.ellipsis),
+                    Text(username, style: theme.textTheme.muted.copyWith(fontSize: 12), overflow: TextOverflow.ellipsis),
+                  ],
+                ),
+              ),
+              Icon(LucideIcons.chevronsUpDown, size: 14, color: theme.colorScheme.mutedForeground),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 

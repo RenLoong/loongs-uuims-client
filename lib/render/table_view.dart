@@ -216,7 +216,7 @@ class _RenderTableViewState extends ConsumerState<RenderTableView> {
           ]),
         ),
       Expanded(
-        child: AdminGrid(
+        child: UuimsGrid(
           loading: _loading,
           rows: rows,
           columns: [

@@ -33,7 +33,7 @@ String? authRedirect(AuthState auth, Uri uri) {
     case AuthStatus.signedOut:
       return loc == '/login' ? null : '/login';
     case AuthStatus.signedIn:
-      if (loc == '/login' || loc == '/splash') return '/';
+      if (loc == '/login' || loc == '/splash' || loc == '/') return '/dashboard';
       if (auth.profile == null) return null; // profile loading; page shows spinner
       final need = kRoutePerms[loc];
       if (need != null && !auth.can(need)) return '/403';
@@ -61,7 +61,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       ShellRoute(
         builder: (_, s, child) => UuimsShell(location: s.uri.path, child: child),
         routes: [
-          GoRoute(path: '/', builder: (_, _) => const HomePage()),
+          GoRoute(path: '/', redirect: (_, _) => '/dashboard'),
+          GoRoute(path: '/account', builder: (_, _) => const HomePage()),
           GoRoute(path: '/403', builder: (_, _) => const ForbiddenPage()),
           // R4: every P1 system page is rendered from its menu.json page (users / roles / menus /
           // depts); only registered custom pages (role-permission-editor) are hand-written.
@@ -70,7 +71,7 @@ final routerProvider = Provider<GoRouter>((ref) {
               path: p,
               builder: (_, s) => MenuRoutePage(path: p, params: s.uri.queryParameters, fallback: const NotFoundPage()),
             ),
-          // R3: 平台概览 (menu.json page uuims.dashboard.overview, page_type dashboard).
+          // R3: 首页 (= 原平台概览, menu.json page uuims.dashboard.overview).
           GoRoute(
             path: '/dashboard',
             builder: (_, s) => MenuRoutePage(path: '/dashboard', params: s.uri.queryParameters, fallback: const NotFoundPage()),
