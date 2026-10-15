@@ -9,17 +9,22 @@ import '../../core/theme.dart';
 import '../../widgets/settings_dialog.dart';
 import '../../core/i18n.dart';
 
-IconData menuIcon(String? name) => switch (name) {
-      'settings' => LucideIcons.settings,
-      'users' => LucideIcons.users,
-      'shield' => LucideIcons.shield,
-      'menu' => LucideIcons.menu,
-      'building' => LucideIcons.building,
-      'folder' => LucideIcons.folder,
-      'layout-dashboard' => LucideIcons.layoutDashboard,
-      'file-text' => LucideIcons.fileText,
-      _ => LucideIcons.circle,
-    };
+/// Map menu icon name to Lucide; null/empty/unknown → no glyph (caller keeps slot width).
+IconData? menuIcon(String? name) {
+  final key = name?.trim();
+  if (key == null || key.isEmpty) return null;
+  return switch (key) {
+    'settings' => LucideIcons.settings,
+    'users' => LucideIcons.users,
+    'shield' => LucideIcons.shield,
+    'menu' => LucideIcons.menu,
+    'building' => LucideIcons.building,
+    'folder' => LucideIcons.folder,
+    'layout-dashboard' => LucideIcons.layoutDashboard,
+    'file-text' => LucideIcons.fileText,
+    _ => null,
+  };
+}
 
 /// White sidebar (merchant-uuims style) and the server menu tree. Language and appearance
 /// live in the settings dialog, opened from the account row (and the Windows caption).
@@ -163,19 +168,23 @@ class UuimsShell extends ConsumerWidget {
 }
 
 class _NavItem extends StatelessWidget {
-  const _NavItem({required this.label, required this.icon, required this.selected, this.onTap, this.indent = 0});
+  const _NavItem({required this.label, required this.selected, this.icon, this.onTap, this.indent = 0});
 
   final String label;
-  final IconData icon;
+  /// Null = no glyph, but the same 16px slot is reserved so labels align.
+  final IconData? icon;
   final bool selected;
   final VoidCallback? onTap;
   final double indent;
+
+  static const double _iconSlot = 16;
 
   @override
   Widget build(BuildContext context) {
     final t = ShadTheme.of(context);
     final blue = AppleColors.of(context).blue;
     final fg = selected ? blue : t.colorScheme.foreground;
+    final iconColor = selected ? blue : t.colorScheme.mutedForeground;
     return Padding(
       padding: EdgeInsets.fromLTRB(8 + indent, 1, 8, 1),
       child: Material(
@@ -187,7 +196,13 @@ class _NavItem extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             child: Row(children: [
-              Icon(icon, size: 16, color: selected ? blue : t.colorScheme.mutedForeground),
+              SizedBox(
+                width: _iconSlot,
+                height: _iconSlot,
+                child: icon == null
+                    ? null
+                    : Icon(icon, size: _iconSlot, color: iconColor),
+              ),
               const SizedBox(width: 8),
               Expanded(child: Text(label, style: t.textTheme.small.copyWith(color: fg, fontWeight: selected ? FontWeight.w600 : FontWeight.w400))),
             ]),
