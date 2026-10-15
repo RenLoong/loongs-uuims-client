@@ -15,7 +15,7 @@ import 'auth/auth_controller.dart';
 /// Page → permission code (menu `perms`). The server enforces the same codes; this only avoids
 /// rendering pages the user can't use (deep links / stale bookmarks → /403).
 const Map<String, String> kRoutePerms = {
-  '/system/admins': 'system:admin:list',
+  '/system/users': 'system:uuims:list',
   '/system/roles': 'system:role:list',
   '/system/menus': 'system:menu:list',
   '/system/depts': 'system:dept:list',
@@ -63,9 +63,9 @@ final routerProvider = Provider<GoRouter>((ref) {
         routes: [
           GoRoute(path: '/', builder: (_, _) => const HomePage()),
           GoRoute(path: '/403', builder: (_, _) => const ForbiddenPage()),
-          // R4: every P1 system page is rendered from its menu.json page (admins / roles / menus /
+          // R4: every P1 system page is rendered from its menu.json page (users / roles / menus /
           // depts); only registered custom pages (role-permission-editor) are hand-written.
-          for (final p in const ['/system/admins', '/system/roles', '/system/menus', '/system/depts'])
+          for (final p in const ['/system/users', '/system/roles', '/system/menus', '/system/depts'])
             GoRoute(
               path: p,
               builder: (_, s) => MenuRoutePage(path: p, params: s.uri.queryParameters, fallback: const NotFoundPage()),
@@ -75,15 +75,25 @@ final routerProvider = Provider<GoRouter>((ref) {
             path: '/dashboard',
             builder: (_, s) => MenuRoutePage(path: '/dashboard', params: s.uri.queryParameters, fallback: const NotFoundPage()),
           ),
-          // Generic pages by code (openForm mode "page", deep links): /p/uuims.system.admin-form?id=3
+          // Generic pages by code (openForm mode "page", deep links): /p/uuims.system.uuims-form?id=3
           GoRoute(
             path: '/p/:page',
             builder: (_, s) => RenderPage(key: ValueKey(s.uri.toString()), page: s.pathParameters['page']!, params: s.uri.queryParameters),
           ),
+          // Menu paths without a hand-written route stay inside ShellRoute so the sidebar
+          // Scrollable is not remounted (errorBuilder used to wrap a fresh UuimsShell each time).
+          GoRoute(
+            path: '/:path(.*)',
+            builder: (_, s) => MenuRoutePage(
+              path: s.uri.path,
+              params: s.uri.queryParameters,
+              fallback: const NotFoundPage(),
+            ),
+          ),
         ],
       ),
     ],
-    // Menu paths without a hand-written route: generic page if the menu declares one, else 404.
+    // True routing failures only (menu catch-all lives in ShellRoute above).
     errorBuilder: (_, s) => UuimsShell(
       location: s.uri.path,
       child: MenuRoutePage(path: s.uri.path, params: s.uri.queryParameters, fallback: const NotFoundPage()),

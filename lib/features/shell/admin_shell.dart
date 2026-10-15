@@ -21,7 +21,7 @@ IconData menuIcon(String? name) => switch (name) {
       _ => LucideIcons.circle,
     };
 
-/// White sidebar (merchant-admin style) and the server menu tree. Language and appearance
+/// White sidebar (merchant-uuims style) and the server menu tree. Language and appearance
 /// live in the settings dialog, opened from the account row (and the Windows caption).
 class UuimsShell extends ConsumerWidget {
   const UuimsShell({super.key, required this.location, required this.child});
@@ -72,6 +72,9 @@ class UuimsShell extends ConsumerWidget {
                 ),
                 Expanded(
                   child: ListView(
+                    // Keep scroll offset across route rebuilds (selected item highlight changes).
+                    key: const PageStorageKey<String>('uuims-sidebar'),
+                    primary: false,
                     padding: const EdgeInsets.only(bottom: 12),
                     children: [for (final m in auth.menus) ..._build(context, m, 0)],
                   ),
