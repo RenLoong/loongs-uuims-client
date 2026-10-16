@@ -98,6 +98,8 @@ class UuimsShell extends ConsumerWidget {
                   username: p?.username ?? '',
                   onOpen: () => showSettingsDialog(context),
                 ),
+                // Deep-link /account opens account tab once.
+                const _OpenSettingsFromQuery(),
               ],
             ),
           ),
@@ -240,3 +242,31 @@ class _NavItem extends StatelessWidget {
     );
   }
 }
+
+/// Opens settings account panel when URI has ?settings=account (then strips the query).
+class _OpenSettingsFromQuery extends StatefulWidget {
+  const _OpenSettingsFromQuery();
+
+  @override
+  State<_OpenSettingsFromQuery> createState() => _OpenSettingsFromQueryState();
+}
+
+class _OpenSettingsFromQueryState extends State<_OpenSettingsFromQuery> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final router = GoRouter.of(context);
+      final q = router.routeInformationProvider.value.uri.queryParameters;
+      if (q['settings'] != 'account') return;
+      final path = router.routeInformationProvider.value.uri.path;
+      router.go(path.isEmpty ? '/dashboard' : path);
+      showSettingsDialog(context, section: 'account');
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => const SizedBox.shrink();
+}
+

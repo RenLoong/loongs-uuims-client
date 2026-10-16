@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import '../features/auth/callback_page.dart';
 import '../features/auth/login_page.dart';
 import '../features/health/health_page.dart';
-import '../features/home/home_page.dart';
 import '../features/shell/admin_shell.dart';
 import '../render/menu_route_page.dart';
 import '../render/render_page.dart';
@@ -62,7 +61,8 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (_, s, child) => UuimsShell(location: s.uri.path, child: child),
         routes: [
           GoRoute(path: '/', redirect: (_, _) => '/dashboard'),
-          GoRoute(path: '/account', builder: (_, _) => const HomePage()),
+          // Former current-account page: content lives in settings modal account tab.
+          GoRoute(path: '/account', redirect: (_, _) => '/dashboard?settings=account'),
           GoRoute(path: '/403', builder: (_, _) => const ForbiddenPage()),
           // R4: every P1 system page is rendered from its menu.json page (users / roles / menus /
           // depts); only registered custom pages (role-permission-editor) are hand-written.
