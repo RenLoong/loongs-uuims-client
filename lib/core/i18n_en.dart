@@ -143,6 +143,7 @@ const Map<String, String> kEnUs = {
   '（已选 {n} 条）': ' ({n} selected)',
   '（脱敏）': ' (masked)',
   '；已失效（菜单文件中已删除）：{list}': '; stale (removed from the menu files): {list}',
+  '账户': 'Account',
   '账户管理': 'Account',
   '设置': 'Settings',
   '通用': 'General',
